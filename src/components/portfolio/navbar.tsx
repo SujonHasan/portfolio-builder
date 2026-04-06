@@ -23,9 +23,16 @@ interface NavbarLink {
 interface NavbarProps {
   links: NavbarLink[];
   showThemeToggle?: boolean;
+  brandLabel?: string;
+  brandHref?: string;
 }
 
-export function Navbar({ links, showThemeToggle = true }: NavbarProps) {
+export function Navbar({
+  links,
+  showThemeToggle = true,
+  brandLabel,
+  brandHref = "/",
+}: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [open, setOpen] = useState(false);
@@ -72,10 +79,10 @@ export function Navbar({ links, showThemeToggle = true }: NavbarProps) {
       <nav className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link
-          href="/"
+          href={brandHref}
           className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
         >
-          {PORTFOLIO_FALLBACK_TITLE}
+          {brandLabel || PORTFOLIO_FALLBACK_TITLE}
         </Link>
 
         {/* Desktop Nav Links */}

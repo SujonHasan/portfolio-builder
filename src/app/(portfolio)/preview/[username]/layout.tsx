@@ -44,7 +44,12 @@ export default async function PreviewLayout({
       data-portfolio-background={themeSettings.backgroundStyle}
       style={getThemeCssVariables(themeSettings) as CSSProperties}
     >
-      <Navbar links={navLinks} showThemeToggle={themeSettings.showThemeToggle} />
+      <Navbar
+        links={navLinks}
+        showThemeToggle={themeSettings.showThemeToggle}
+        brandLabel={about?.name || site.title}
+        brandHref={`/${site.username}`}
+      />
       <main>{children}</main>
       <Footer
         ownerName={about?.name}
