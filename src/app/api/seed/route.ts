@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { saveAboutSingleton } from "@/lib/about";
 import { connectDB } from "@/lib/db";
+import {
+  DEFAULT_ENABLED_PORTFOLIO_SECTIONS,
+  DEFAULT_PORTFOLIO_SECTION_ORDER,
+} from "@/lib/portfolio-config";
+import { savePortfolioSettingsSingleton } from "@/lib/portfolio-settings";
 import { createSiteForUser } from "@/lib/site";
+import { saveThemeSettingsSingleton } from "@/lib/theme-settings";
+import { slugify } from "@/lib/utils";
 import User from "@/models/User";
 import Project from "@/models/Project";
 import Skill from "@/models/Skill";
@@ -168,8 +176,18 @@ async function seed() {
         status: "published",
       },
     ];
-    await Project.deleteMany({ siteId });
-    await Project.insertMany(projects.map((project) => ({ ...project, siteId })));
+    const objectSiteId = new mongoose.Types.ObjectId(siteId);
+    await Project.deleteMany({
+      $or: [{ siteId }, { siteId: objectSiteId }, { siteId: siteId.toString() }],
+    });
+    await Project.collection.deleteMany({ siteId: objectSiteId, slug: null });
+    await Project.insertMany(
+      projects.map((project) => ({
+        ...project,
+        siteId: objectSiteId,
+        slug: slugify(project.title),
+      }))
+    );
 
     // Experience
     const experiences = [
@@ -300,6 +318,22 @@ async function seed() {
       },
       { upsert: true }
     );
+
+    // Portfolio section visibility/order
+    await savePortfolioSettingsSingleton({
+      siteId,
+      enabledSections: DEFAULT_ENABLED_PORTFOLIO_SECTIONS,
+      sectionOrder: DEFAULT_PORTFOLIO_SECTION_ORDER,
+    });
+
+    // Theme settings
+    await saveThemeSettingsSingleton({
+      siteId,
+      themePreset: "modern",
+      backgroundStyle: "glow",
+      radiusScale: "soft",
+      showThemeToggle: true,
+    });
 
     return NextResponse.json({
       success: true,
