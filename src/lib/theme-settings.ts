@@ -215,3 +215,41 @@ export function getThemeCssVariables(input?: Partial<IThemeSettings> | null) {
       theme.radiusScale === "soft" ? "1rem" : theme.radiusScale === "sharp" ? "0.2rem" : "0.65rem",
   } as Record<string, string>;
 }
+
+export function getDarkThemeCssVariables(input?: Partial<IThemeSettings> | null) {
+  const theme = normalizeThemeSettings(input);
+
+  return {
+    "--background": hexToHslString("#020817"),
+    "--foreground": hexToHslString("#f8fafc"),
+    "--card": hexToHslString("#0f172a"),
+    "--card-foreground": hexToHslString("#f8fafc"),
+    "--popover": hexToHslString("#0f172a"),
+    "--popover-foreground": hexToHslString("#f8fafc"),
+    "--primary": hexToHslString(theme.primaryColor),
+    "--primary-foreground": hexToHslString("#ffffff"),
+    "--secondary": hexToHslString("#1e293b"),
+    "--secondary-foreground": hexToHslString("#f8fafc"),
+    "--muted": hexToHslString("#1e293b"),
+    "--muted-foreground": hexToHslString("#cbd5e1"),
+    "--accent": hexToHslString("#1e293b"),
+    "--accent-foreground": hexToHslString("#f8fafc"),
+    "--border": hexToHslString("#334155"),
+    "--input": hexToHslString("#334155"),
+    "--ring": hexToHslString(theme.primaryColor),
+    "--radius":
+      theme.radiusScale === "soft" ? "1rem" : theme.radiusScale === "sharp" ? "0.2rem" : "0.65rem",
+  } as Record<string, string>;
+}
+
+export function getThemeCssText(input?: Partial<IThemeSettings> | null) {
+  const toDeclarations = (variables: Record<string, string>) =>
+    Object.entries(variables)
+      .map(([name, value]) => `${name}: ${value};`)
+      .join("\n");
+
+  return {
+    light: toDeclarations(getThemeCssVariables(input)),
+    dark: toDeclarations(getDarkThemeCssVariables(input)),
+  };
+}

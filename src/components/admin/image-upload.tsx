@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
+import { SmartImage } from "@/components/shared/smart-image";
 
 interface ImageUploadProps {
   value: string;
@@ -56,7 +56,7 @@ export function ImageUpload({ value, onChange, folder = "projects" }: ImageUploa
     <div className="space-y-2">
       {value ? (
         <div className="relative inline-block">
-          <Image
+          <SmartImage
             src={value}
             alt="Upload"
             width={200}

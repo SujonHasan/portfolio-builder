@@ -33,11 +33,11 @@ export function EducationSection({ education }: EducationSectionProps) {
 
                   {/* Content card */}
                   <div
-                    className={`ml-10 md:ml-0 md:w-[calc(50%-2rem)] rounded-lg border bg-card p-6 shadow-sm ${
+                    className={`ml-10 md:ml-0 md:w-[calc(50%-2rem)] rounded-lg border bg-card p-6 text-card-foreground shadow-sm ${
                       index % 2 === 0 ? "md:mr-auto" : "md:ml-auto"
                     }`}
                   >
-                    <h3 className="text-lg font-bold">{edu.institution}</h3>
+                    <h3 className="text-lg font-bold text-card-foreground">{edu.institution}</h3>
                     <p className="text-primary font-medium">{edu.degree}</p>
                     <p className="text-sm text-muted-foreground">{edu.field}</p>
                     <p className="text-sm text-muted-foreground mt-1">
@@ -49,7 +49,7 @@ export function EducationSection({ education }: EducationSectionProps) {
                         : ""}
                     </p>
                     {edu.grade && (
-                      <p className="text-sm mt-2">
+                      <p className="text-sm mt-2 text-card-foreground">
                         <span className="font-medium">Grade:</span> {edu.grade}
                       </p>
                     )}

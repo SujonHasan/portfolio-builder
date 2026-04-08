@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { withAuth } from "@/lib/auth-guard";
 import crypto from "crypto";
+import UploadAsset from "@/models/UploadAsset";
+
+export const runtime = "nodejs";
 
 const ALLOWED_TYPES: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -14,7 +15,7 @@ const ALLOWED_FOLDERS = ["projects", "profile", "certifications", "seo"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req: NextRequest) {
-  return withAuth(req, async (request) => {
+  return withAuth(req, async (request, auth) => {
     try {
       const formData = await request.formData();
       const file = formData.get("file") as File;
@@ -47,15 +48,34 @@ export async function POST(req: NextRequest) {
       // Get extension from MIME type, not from user filename
       const ext = ALLOWED_TYPES[file.type];
       const filename = `${crypto.randomUUID()}.${ext}`;
-      const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
+      const asset = await UploadAsset.create({
+        siteId: auth.siteId,
+        ownerUserId: auth.userId,
+        folder,
+        filename,
+        contentType: file.type,
+        size: file.size,
+        data: buffer,
+      });
 
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
-
-      const url = `/uploads/${folder}/${filename}`;
-      return NextResponse.json({ success: true, data: { url } });
-    } catch {
-      return NextResponse.json({ success: false, error: "Failed to upload file" }, { status: 500 });
+      const url = `/api/uploads/${asset._id.toString()}`;
+      return NextResponse.json({
+        success: true,
+        data: {
+          url,
+          id: asset._id.toString(),
+          contentType: file.type,
+          size: file.size,
+        },
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      const details =
+        process.env.NODE_ENV === "development" && error instanceof Error ? error.message : undefined;
+      return NextResponse.json(
+        { success: false, error: "Failed to upload file", details },
+        { status: 500 }
+      );
     }
   });
 }

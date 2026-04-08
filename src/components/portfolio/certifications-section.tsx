@@ -27,13 +27,13 @@ export function CertificationsSection({
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {certifications.map((cert) => (
             <StaggerItem key={cert._id}>
-              <div className="rounded-lg border bg-card p-6 shadow-sm h-full flex flex-col">
+              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm h-full flex flex-col">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="p-2 rounded-md bg-primary/10 text-primary shrink-0">
                     <Award className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold leading-tight">{cert.title}</h3>
+                    <h3 className="font-bold leading-tight text-card-foreground">{cert.title}</h3>
                     <p className="text-sm text-muted-foreground">
                       {cert.issuer}
                     </p>

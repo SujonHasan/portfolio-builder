@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { IAbout } from "@/types";
 import { SectionHeading } from "@/components/portfolio/section-heading";
 import { sanitizeRichText } from "@/lib/sanitize";
+import { SmartImage } from "@/components/shared/smart-image";
 import {
   MotionWrapper,
   StaggerContainer,
@@ -26,7 +26,7 @@ export function AboutSection({ about }: AboutSectionProps) {
             <div className="flex justify-center">
               {about?.profileImage ? (
                 <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-lg">
-                  <Image
+                  <SmartImage
                     src={about.profileImage}
                     alt={about.name || "Profile"}
                     fill

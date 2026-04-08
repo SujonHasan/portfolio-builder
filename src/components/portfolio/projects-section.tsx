@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/shared/icons";
+import { SmartImage } from "@/components/shared/smart-image";
 import { IProject } from "@/types";
 import { SectionHeading } from "@/components/portfolio/section-heading";
 import {
@@ -33,7 +33,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 <Card className="group overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg h-full flex flex-col">
                   <div className="relative aspect-video overflow-hidden">
                     {project.thumbnail ? (
-                      <Image
+                      <SmartImage
                         src={project.thumbnail}
                         alt={project.title}
                         fill

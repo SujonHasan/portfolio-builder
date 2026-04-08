@@ -1,9 +1,8 @@
-import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/portfolio/navbar";
 import { Footer } from "@/components/portfolio/footer";
 import { PORTFOLIO_SECTIONS } from "@/lib/portfolio-config";
-import { getThemeCssVariables, getThemeSettingsBySiteId } from "@/lib/theme-settings";
+import { getThemeCssText, getThemeSettingsBySiteId } from "@/lib/theme-settings";
 import { getPortfolioSettingsBySiteId } from "@/lib/portfolio-settings";
 import { getAboutBySiteId } from "@/lib/about";
 import { getSiteByUsername } from "@/lib/site";
@@ -37,13 +36,27 @@ export default async function PreviewLayout({
       label: section.navLabel || section.label,
       href: `#${section.anchor}`,
     }));
+  const themeScopeId = `portfolio-${site._id.toString()}`;
+  const themeCss = getThemeCssText(themeSettings);
 
   return (
     <div
+      data-portfolio-theme-scope={themeScopeId}
       data-portfolio-theme={themeSettings.themePreset}
       data-portfolio-background={themeSettings.backgroundStyle}
-      style={getThemeCssVariables(themeSettings) as CSSProperties}
     >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+[data-portfolio-theme-scope="${themeScopeId}"] {
+${themeCss.light}
+}
+.dark [data-portfolio-theme-scope="${themeScopeId}"] {
+${themeCss.dark}
+}
+          `.trim(),
+        }}
+      />
       <Navbar
         links={navLinks}
         showThemeToggle={themeSettings.showThemeToggle}
